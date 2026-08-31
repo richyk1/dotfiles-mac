@@ -108,7 +108,7 @@ sdk() {
 [ -s "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Conditional sourcing for performance
-[ -s "/Users/kerosene/.bun/_bun" ] && source "/Users/kerosene/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Aliases
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
@@ -136,7 +136,7 @@ fastfetch
 
 
 # Added by Antigravity
-export PATH="/Users/kerosene/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -144,10 +144,10 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # opencode
-export PATH=/Users/kerosene/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
 # flashlight
-export PATH="/Users/kerosene/.flashlight/bin:$PATH"
+export PATH="$HOME/.flashlight/bin:$PATH"
 
 # maestro-runner
 export PATH="$HOME/.maestro-runner/bin:$PATH"

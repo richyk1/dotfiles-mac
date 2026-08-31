@@ -44,7 +44,7 @@ skills:
     - smalldocs
     - gh-stack
   customDirectories: 
-    - /Users/kerosene/.omp/external-skills/emilkowalski/skills
+    - ~/.omp/external-skills/emilkowalski/skills
 providers: 
   tts: local
 stt: 

@@ -20,6 +20,7 @@ seed() { # seed <repo-relative-example> <abs-dest>  (copy only if dest missing)
 
 # --- symlinked config ---
 link ghostty/config                       "$HOME/.config/ghostty/config"
+link aerospace/aerospace.toml             "$HOME/.aerospace.toml"
 link zsh/.zshrc                           "$HOME/.zshrc"
 link zsh/.zprofile                        "$HOME/.zprofile"
 link omp/config.yml                       "$HOME/.omp/agent/config.yml"
