@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json",
+  "mcpServers": {
+    "obsidian": {
+      "type": "http",
+      "url": "http://127.0.0.1:27200/mcp",
+      "headers": {
+        "Authorization": "Bearer REPLACE_ME"
+      }
+    },
+    "swissdevjobs": {
+      "type": "stdio",
+      "command": "/Users/kerosene/Containers/sdj/sdj-mcp",
+      "timeout": 120000
+    }
+  },
+  "disabledServers": [
+    "browser_mcp",
+    "figma-console",
+    "graphite-mcp",
+    "graphite",
+    "graphite-mcp:graphite",
+    "graphite-mcp:graphite-mcp",
+    "linear-server",
+    "lldb-mcp",
+    "playwright",
+    "prompts-chat",
+    "voicemode"
+  ]
+}

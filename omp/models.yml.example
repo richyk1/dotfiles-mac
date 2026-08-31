@@ -1,0 +1,7 @@
+providers:
+  litellm:
+    baseUrl: https://llm.agreo.se/v1
+    apiKey: sk-REPLACE_ME
+    api: openai-completions
+    discovery:
+      type: litellm

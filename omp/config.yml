@@ -1,0 +1,66 @@
+symbolPreset: nerd
+theme: 
+  dark: dark
+setupVersion: 2
+statusLine: 
+  separator: slash
+  preset: minimal
+modelRoles: 
+  smol: anthropic/claude-sonnet-5:low
+  advisor: anthropic/claude-sonnet-5:low
+  slow: anthropic/claude-opus-4-8:high
+  designer: anthropic/claude-opus-4-8
+defaultThinkingLevel: auto
+dev: 
+  autoqaConsent: granted
+browser: 
+  headless: true
+advisor: 
+  enabled: true
+skills: 
+  ignoredSkills: 
+    - brainstorming
+  includeSkills: 
+    - karpathy-guidelines
+    - impeccable
+    - caveman
+    - caveman-compress
+    - caveman-commit
+    - caveman-review
+    - caveman-stats
+    - caveman-help
+    - cavecrew
+    - research-notes
+    - herdr
+    - tldr
+    - animate
+    - animation-vocabulary
+    - apple-design
+    - emil-design-eng
+    - find-animation-opportunities
+    - improve-animations
+    - prototype
+    - review-animations
+    - smalldocs
+    - gh-stack
+  customDirectories: 
+    - /Users/kerosene/.omp/external-skills/emilkowalski/skills
+providers: 
+  tts: local
+stt: 
+  enabled: true
+  modelName: parakeet
+  submitTrigger: say-submit
+retry: 
+  fallbackChains: 
+    default: 
+      - openai-codex/gpt-5.5
+      - anthropic/claude-opus-4-8
+terminal: 
+  showImages: true
+completion: 
+  notify: "off"
+ask: 
+  notify: "off"
+composer: 
+  shape: rule

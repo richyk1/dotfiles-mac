@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "rust-analyzer": { "disabled": true },
+    "rust-glancer": {
+      "command": "/Users/kerosene/.cargo/bin/rust-glancer",
+      "args": ["lsp"],
+      "fileTypes": [".rs"],
+      "languageId": "rust",
+      "rootMarkers": ["Cargo.toml"]
+    }
+  }
+}

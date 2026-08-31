@@ -1,0 +1,10 @@
+# real secret files (only the .example templates are tracked)
+zsh/.zsh_secrets
+omp/models.yml
+omp/mcp.json
+omp/smithery.json
+omp/coms.json
+
+# noise
+.DS_Store
+*.lock
