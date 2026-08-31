@@ -25,7 +25,7 @@ palette = 13=#9a5feb
 palette = 14=#67fff0
 palette = 15=#ffffff
 font-family = Maple Mono NF
-font-size = 14.5
+font-size = 11
 # Straighten Maple Mono's cursive italic (a f i j k l x y) while keeping the slant
 font-feature = cv31
 font-feature = cv32
@@ -57,3 +57,4 @@ keybind = super+f=text:\x02/;
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
 macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = hidden
