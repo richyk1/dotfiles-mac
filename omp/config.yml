@@ -30,9 +30,7 @@ skills:
     - caveman-stats
     - caveman-help
     - cavecrew
-    - research-notes
     - herdr
-    - tldr
     - animate
     - animation-vocabulary
     - apple-design
@@ -41,10 +39,10 @@ skills:
     - improve-animations
     - prototype
     - review-animations
-    - smalldocs
     - gh-stack
+    - claude-for-safari
   customDirectories: 
-    - ~/.omp/external-skills/emilkowalski/skills
+    - ~/.omp/skills
 providers: 
   tts: local
 stt: 
