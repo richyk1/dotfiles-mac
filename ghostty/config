@@ -58,3 +58,7 @@ keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
 macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = hidden
+
+# Treat left Option as Alt/Meta so Option+Backspace = delete-word (zsh backward-kill-word).
+# Right Option stays as macOS Option for special-character input (é, –, etc.).
+macos-option-as-alt = left
