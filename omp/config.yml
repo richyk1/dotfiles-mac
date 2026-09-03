@@ -1,64 +1,44 @@
 symbolPreset: nerd
-theme: 
+theme:
   dark: dark
 setupVersion: 2
-statusLine: 
+statusLine:
   separator: slash
   preset: minimal
-modelRoles: 
+modelRoles:
   smol: anthropic/claude-sonnet-5:low
   advisor: anthropic/claude-sonnet-5:low
   slow: anthropic/claude-opus-4-8:high
   designer: anthropic/claude-opus-4-8
+  default: anthropic/claude-fable-5-1:low
 defaultThinkingLevel: auto
-dev: 
+dev:
   autoqaConsent: granted
-browser: 
+browser:
   headless: true
-advisor: 
+advisor:
   enabled: true
-skills: 
-  ignoredSkills: 
+skills:
+  ignoredSkills:
     - brainstorming
-  includeSkills: 
-    - karpathy-guidelines
-    - impeccable
-    - caveman
-    - caveman-compress
-    - caveman-commit
-    - caveman-review
-    - caveman-stats
-    - caveman-help
-    - cavecrew
-    - herdr
-    - animate
-    - animation-vocabulary
-    - apple-design
-    - emil-design-eng
-    - find-animation-opportunities
-    - improve-animations
-    - prototype
-    - review-animations
-    - gh-stack
-    - claude-for-safari
-  customDirectories: 
+  customDirectories:
     - ~/.omp/skills
-providers: 
+providers:
   tts: local
-stt: 
+stt:
   enabled: true
   modelName: parakeet
   submitTrigger: say-submit
-retry: 
-  fallbackChains: 
-    default: 
+retry:
+  fallbackChains:
+    default:
       - openai-codex/gpt-5.5
       - anthropic/claude-opus-4-8
-terminal: 
+terminal:
   showImages: true
-completion: 
+completion:
   notify: "off"
-ask: 
+ask:
   notify: "off"
-composer: 
+composer:
   shape: rule

@@ -29,7 +29,6 @@ link omp/agents/swiftui-expert.md         "$HOME/.omp/agent/agents/swiftui-exper
 link omp/extensions/herdr-omp-agent-state.ts "$HOME/.omp/agent/extensions/herdr-omp-agent-state.ts"
 link omp/extensions/tailscale-coms.ts     "$HOME/.omp/agent/extensions/tailscale-coms.ts"
 link omp/skills                           "$HOME/.omp/skills"
-link claude/CLAUDE.md                     "$HOME/.claude/CLAUDE.md"
 
 # --- secret files: seeded from templates, never symlinked, never committed ---
 seed zsh/.zsh_secrets.example             "$HOME/.zsh_secrets"
