@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "skills",
+  "owner": "intellectronica",
+  "repo": "agent-skills",
+  "path": "plugins/anki-connect/skills",
+  "branch": "main",
+  "sha": "7de9fca45d9d7f2909b11b3dee7b01a92c331ce7",
+  "source": "manual"
+}

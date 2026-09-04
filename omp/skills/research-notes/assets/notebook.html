@@ -1,0 +1,589 @@
+<!doctype html>
+<!--
+  research-notes template. Replace the prose and the NOTES object; keep the engine.
+  Storage key is research-notes-v1 (see reference/verify.md).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TITLE: working notes</title>
+<style>
+  :root {
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --ink:#1a1a1a; --ink-head:#334155; --ink-muted:#64748b;
+    --rule:#e2e8f0; --border:#cbd5e1; --border-str:#94a3b8;
+    --blue:#2563eb; --amber:#b45309; --green:#047857; --red:#dc2626;
+    --z-pop:50; --z-toast:100;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-slow: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:1.5rem; }
+  body { margin:0; background:#fff; color:var(--ink); font-family:var(--mono);
+         font-size:14.7px; line-height:1.62; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1000px; margin:0 auto; padding:2.5rem 1.5rem 8rem; }
+
+  h1 { font-size:1.75rem; font-weight:700; color:var(--ink-head); line-height:1.3; margin:0 0 1.1rem; text-wrap:balance; }
+  .standfirst { font-style:italic; color:var(--ink-muted); margin:0 0 2.2rem; }
+  h2 { font-size:1.1rem; font-weight:700; color:var(--ink-head); text-transform:uppercase;
+       letter-spacing:0.04em; display:inline-block; border-bottom:1px dashed var(--border);
+       padding-bottom:0.35rem; margin:3.6rem 0 1.4rem; }
+  h3 { font-size:0.95rem; font-weight:700; color:var(--ink-head); margin:2rem 0 0.7rem; }
+  p { margin:0 0 1.1rem; text-wrap:pretty; }
+  p:last-child { margin-bottom:0; }
+  strong { font-weight:700; color:var(--ink-head); }
+  a { color:var(--blue); text-underline-offset:3px; }
+  .back { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-muted);
+          text-decoration:none; display:inline-block; margin-bottom:2.5rem; }
+  ul.plain { margin:0 0 1.1rem; padding-left:1.3rem; }
+  ul.plain li { margin-bottom:0.5rem; }
+  .m { font-weight:700; white-space:nowrap; }
+  .m-fact{color:var(--green);} .m-inference{color:var(--blue);}
+  .m-assumption{color:var(--amber);} .m-risk{color:var(--red);}
+
+  /* footnote markers */
+  sup.ref { line-height:0; font-size:0.72em; border-radius:2px; }
+  sup.ref.flash, ol.refs li.flash { animation: landflash 1200ms ease-out; }
+  @keyframes landflash { 0%, 8% { background-color:#fde68a; } 100% { background-color:transparent; } }
+  sup.ref a { text-decoration:none; font-weight:700; padding:0 0.1em; border-bottom:1px solid transparent; }
+  sup.ref a[data-kind="source"], sup.ref a[data-kind="doc"] { color:var(--green); }
+  sup.ref a[data-kind="inference"] { color:var(--blue); }
+  sup.ref a[data-kind="assumption"] { color:var(--amber); }
+  sup.ref a:hover, sup.ref a:focus-visible { border-bottom-color:currentColor; }
+  body.flagging sup.ref a[data-kind="inference"],
+  body.flagging sup.ref a[data-kind="assumption"] { background:#fef3c7; outline:1px solid var(--amber); border-radius:2px; }
+
+  .fnpop { position:absolute; z-index:var(--z-pop); max-width:380px; background:#fff;
+           border:1px solid var(--border-str); border-radius:2px; padding:0.6rem 0.75rem;
+           font-size:0.78rem; line-height:1.5; box-shadow:0 4px 14px rgba(15,23,42,0.12);
+           visibility:hidden; opacity:0; pointer-events:none; transform:translateY(-4px);
+           transition:opacity 150ms var(--ease), transform 150ms var(--ease), visibility 0s linear 150ms; }
+  .fnpop.on { visibility:visible; opacity:1; pointer-events:auto; transform:none;
+              transition:opacity 150ms var(--ease), transform 150ms var(--ease), visibility 0s; }
+  .fnpop .k { text-transform:uppercase; letter-spacing:0.05em; font-size:0.68rem; font-weight:700; display:block; margin-bottom:0.25rem; }
+  .fnpop .s { color:var(--ink-muted); display:block; margin-top:0.3rem; word-break:break-word; }
+
+  /* widget frame: the only boxed element */
+  .widget { border:1px dashed var(--border-str); border-radius:2px; background:#fff; margin:1.8rem 0 1.4rem; }
+  .widget > .wlabel { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--ink-muted); padding:0.55rem 1rem; border-bottom:1px dashed var(--rule);
+    display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; }
+  .widget > .wbody { padding:1.1rem 1rem; }
+  .widget > .wfoot { border-top:1px dashed var(--rule); padding:0.6rem 1rem; display:flex;
+    align-items:center; gap:1rem; flex-wrap:wrap; }
+  .wfoot .cap { font-size:0.82rem; flex:1; min-width:12rem; }
+  .wfoot .count { font-size:0.75rem; color:var(--ink-muted); font-variant-numeric:tabular-nums; }
+  .btns { display:flex; gap:0.35rem; }
+  .btns button { font-family:var(--mono); font-size:0.75rem; line-height:1; width:26px; height:24px;
+    cursor:pointer; background:#fff; color:var(--ink-head); border:1px solid var(--border); border-radius:2px; }
+  .btns button:hover:not(:disabled) { border-color:var(--border-str); background:#f8fafc; }
+  .btns button:disabled { color:var(--border); cursor:default; }
+  .toggles { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .toggles button { font-family:var(--mono); font-size:0.78rem; cursor:pointer; padding:0.3rem 0.75rem;
+    border-radius:2px; background:#fff; color:var(--ink-muted); border:1px solid var(--border); }
+  .toggles button[aria-pressed="true"] { background:#f1f5f9; color:var(--ink-head); border-color:var(--border-str); font-weight:700; }
+  svg.flow { width:100%; height:auto; display:block; }
+  .note { color:var(--ink-muted); font-size:0.88rem; margin:0 0 1.1rem; }
+  .note b { color:var(--ink-head); }
+
+  .integrity { border:1px dashed var(--border-str); border-radius:2px; padding:0.9rem 1rem; margin:0 0 2.4rem; }
+  .integrity .row { display:flex; gap:1.4rem; flex-wrap:wrap; align-items:baseline; }
+  .integrity .stat { font-size:0.82rem; }
+  .integrity .stat b { font-size:1.05rem; font-variant-numeric:tabular-nums; }
+  .integrity .bar { display:flex; height:6px; margin:0.7rem 0 0.55rem; border-radius:1px; overflow:hidden; border:1px solid var(--rule); }
+  .integrity .bar i { display:block; height:100%; width:0; transition:width 760ms var(--ease-slow); }
+  .integrity .legend { font-size:0.75rem; color:var(--ink-muted); }
+
+  .receipt { padding:0.7rem 1rem; border-bottom:1px dashed var(--rule); }
+  .receipt:last-child { border-bottom:0; }
+  .receipt .src { display:block; font-size:0.78rem; color:var(--ink-muted); margin-top:0.25rem; word-break:break-word; }
+
+  .sliders { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  .sl label { display:flex; justify-content:space-between; gap:0.6rem; font-size:0.82rem; margin-bottom:0.3rem; }
+  .sl label .v { font-weight:700; color:var(--ink-head); font-variant-numeric:tabular-nums; }
+  .sl .hint { font-size:0.75rem; color:var(--ink-muted); margin-top:0.25rem; }
+  input[type=range] { width:100%; appearance:none; height:2px; background:var(--border); outline-offset:4px; }
+  input[type=range]::-webkit-slider-thumb { appearance:none; width:13px; height:13px; border-radius:2px;
+    background:#fff; border:1.5px solid var(--ink-head); cursor:pointer; }
+  input[type=range]::-moz-range-thumb { width:13px; height:13px; border-radius:2px;
+    background:#fff; border:1.5px solid var(--ink-head); cursor:pointer; }
+  .tscroll { overflow-x:auto; margin-top:1.4rem; }
+  table.cmp { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  table.cmp th, table.cmp td { text-align:right; padding:0.5rem 0.6rem; border-bottom:1px dashed var(--rule); white-space:nowrap; }
+  table.cmp th:first-child, table.cmp td:first-child { text-align:left; }
+  table.cmp thead th { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-muted); font-weight:700; }
+  table.cmp tbody tr:last-child td { border-bottom:0; }
+  td.num { font-variant-numeric:tabular-nums; }
+  .win { color:var(--green); font-weight:700; } .lose { color:var(--red); font-weight:700; }
+
+  .task { display:grid; grid-template-columns:auto 1fr auto auto; gap:0.7rem; align-items:start;
+    padding:0.6rem 1rem; border-bottom:1px dashed var(--rule); }
+  .task:last-of-type { border-bottom:0; }
+  .task input[type=checkbox] { appearance:none; width:14px; height:14px; margin-top:0.3rem; cursor:pointer;
+    border:1px solid var(--border-str); border-radius:2px; background:#fff; }
+  .task input[type=checkbox]:checked { background:var(--ink-head); border-color:var(--ink-head); }
+  .task input[type=checkbox]:checked::after { content:"x"; display:block; color:#fff; font-size:10px;
+    line-height:12px; text-align:center; font-family:var(--mono); }
+  .task.done .t { color:var(--ink-muted); text-decoration:line-through; }
+  .task .cost { font-size:0.75rem; color:var(--ink-muted); white-space:nowrap; }
+  .task .kill { background:none; border:0; color:var(--border-str); cursor:pointer; font-family:var(--mono); padding:0 0.2rem; }
+  .task .kill:hover { color:var(--red); }
+  .addrow { display:flex; gap:0.5rem; padding:0.7rem 1rem; }
+  .addrow input[type=text] { flex:1; font-family:var(--mono); font-size:0.85rem; padding:0.4rem 0.6rem;
+    border:1px solid var(--border); border-radius:2px; background:#fff; color:var(--ink); }
+  button.act { font-family:var(--mono); font-size:0.8rem; cursor:pointer; background:#fff; color:var(--ink-head);
+    border:1px solid var(--border); border-radius:2px; padding:0.4rem 0.85rem; }
+  button.act:hover { border-color:var(--border-str); background:#f8fafc; }
+  button.act[aria-pressed="true"] { background:#f1f5f9; border-color:var(--border-str); font-weight:700; }
+
+  textarea { width:100%; min-height:170px; resize:vertical; font-family:var(--mono); font-size:0.85rem;
+    line-height:1.6; border:1px dashed var(--border-str); border-radius:2px; padding:0.9rem 1rem;
+    background:#fff; color:var(--ink); }
+  :focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  .saved { font-size:0.75rem; color:var(--ink-muted); height:1.2rem; margin-top:0.4rem; }
+  .toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:var(--z-toast);
+    background:var(--ink-head); color:#fff; padding:0.5rem 1rem; border-radius:2px; font-size:0.82rem;
+    opacity:0; pointer-events:none; transition:opacity 200ms ease-out; }
+  .toast.on { opacity:1; }
+  hr.sep { border:0; border-top:1px dashed var(--rule); margin:3rem 0 0; }
+
+  /* ---------- motion: every rule here explains a state change ---------- */
+  sup.ref a { transition:color 140ms var(--ease), background-color 200ms var(--ease),
+              outline-color 200ms var(--ease), border-bottom-color 140ms var(--ease); }
+  .btns button, .toggles button, button.act, .task input[type=checkbox], .addrow input[type=text], textarea {
+    transition:background-color 150ms var(--ease), border-color 150ms var(--ease), color 150ms var(--ease); }
+  .task .t { transition:color 220ms var(--ease); }
+  td.num { transition:color 220ms var(--ease); }
+  td.num.bump { animation:cellbump 420ms var(--ease); }
+  @keyframes cellbump { from { background-color:#e2e8f0; } to { background-color:transparent; } }
+  .toast { transition:opacity 200ms var(--ease), transform 200ms var(--ease); }
+  .toast.on { transform:translateX(-50%) translateY(-4px); }
+  svg.flow rect.box { transition:fill 260ms var(--ease), stroke 260ms var(--ease), stroke-width 260ms var(--ease); }
+  svg.flow text.lbl, svg.flow text.thr { transition:fill 260ms var(--ease); }
+
+  ol.refs { list-style:none; counter-reset:r; margin:0; padding:0; font-size:0.83rem; }
+  ol.refs li { counter-increment:r; display:grid; grid-template-columns:2.6rem 5.6rem 1fr; gap:0.7rem;
+    padding:0.6rem 0; border-bottom:1px dashed var(--rule); }
+  ol.refs li:last-child { border-bottom:0; }
+  ol.refs li::before { content:"[" counter(r) "]"; color:var(--ink-muted); font-variant-numeric:tabular-nums; }
+  ol.refs li:target { background:#f1f5f9; }
+  ol.refs .kind { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; font-weight:700; }
+  ol.refs .kind[data-k="source"], ol.refs .kind[data-k="doc"] { color:var(--green); }
+  ol.refs .kind[data-k="inference"] { color:var(--blue); }
+  ol.refs .kind[data-k="assumption"] { color:var(--amber); }
+  ol.refs .where { display:block; color:var(--ink-muted); margin-top:0.2rem; word-break:break-word; }
+  ol.refs .backs { margin-left:0.4rem; }
+  ol.refs .backs a { text-decoration:none; color:var(--border-str); }
+  ol.refs .backs a:hover { color:var(--blue); }
+  footer { margin-top:3rem; font-size:0.8rem; color:var(--ink-muted); }
+
+  @media (max-width:640px) {
+    .wrap { padding:2rem 1.1rem 5rem; }
+    h1 { font-size:1.4rem; }
+    .task { grid-template-columns:auto 1fr auto; }
+    .task .cost { grid-column:2; }
+    ol.refs li { grid-template-columns:2.4rem 1fr; }
+    ol.refs .kind { grid-column:2; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    html { scroll-behavior:auto; }
+    *,*::before,*::after { transition-duration:1ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="#" onclick="return false;">&larr; Working notes</a>
+
+  <h1>TITLE: the question, stated as a claim</h1>
+  <p class="standfirst">One line on what is being decided and what is still unknown. Every factual claim carries a reference.</p>
+
+  <div class="integrity">
+    <div class="row">
+      <span class="stat"><b id="i-total">0</b> claims</span>
+      <span class="stat"><b id="i-fact" class="m-fact">0</b> from source or published docs</span>
+      <span class="stat"><b id="i-inf" class="m-inference">0</b> inferred</span>
+      <span class="stat"><b id="i-asm" class="m-assumption">0</b> unverified</span>
+    </div>
+    <div class="bar" id="i-bar"></div>
+    <div class="row">
+      <span class="legend" id="i-legend"></span>
+      <button class="act" id="flag" aria-pressed="false" style="margin-left:auto;padding:0.2rem 0.6rem;font-size:0.75rem">Highlight everything not from a primary source</button>
+    </div>
+  </div>
+
+  <p>
+    Opening paragraph. State the situation and the measured baseline<span data-fn="ex-doc"></span>.
+    Then the question this document answers.
+  </p>
+  <p>
+    Reference colours carry meaning. <span class="m m-fact">Green</span> is a file read or a published
+    benchmark. <span class="m m-inference">Blue</span> is reasoning from those. <span class="m m-assumption">Amber</span>
+    is a number nobody has measured.
+  </p>
+
+  <h2>What is actually true today</h2>
+  <p>
+    A claim taken from source<span data-fn="ex-source"></span>, and a second claim reusing the same
+    reference<span data-fn="ex-source"></span> to show backlinks.
+  </p>
+
+  <div class="widget">
+    <div class="wlabel" id="pipe-label">Stepper: walk a process one stage at a time</div>
+    <div class="wbody">
+      <div class="toggles" role="group" aria-label="Variant">
+        <button id="pipe-a" aria-pressed="true">Variant A</button>
+        <button id="pipe-b" aria-pressed="false">Variant B</button>
+      </div>
+      <svg class="flow" id="pipe-svg" viewBox="0 0 620 96" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="pipe-desc"></svg>
+      <p id="pipe-desc" class="note" style="margin:0.6rem 0 0"></p>
+    </div>
+    <div class="wfoot">
+      <span class="cap" id="pipe-cap"></span>
+      <span class="count" id="pipe-count"></span>
+      <span class="btns">
+        <button id="pipe-prev" aria-label="Previous step">&lsaquo;</button>
+        <button id="pipe-next" aria-label="Next step">&rsaquo;</button>
+        <button id="pipe-reset" aria-label="Reset">&#8635;</button>
+      </span>
+    </div>
+  </div>
+
+  <h2>What it would cost</h2>
+  <p>
+    Known side fixed at published numbers<span data-fn="ex-doc"></span>. Unknown side exposed as
+    inputs<span data-fn="ex-assumption"></span> rather than asserted.
+  </p>
+
+  <div class="widget">
+    <div class="wlabel">Measured against assumed</div>
+    <div class="wbody">
+      <div class="sliders">
+        <div class="sl"><label for="dur">quantity A <span class="v" id="dur-v">180</span></label><input type="range" id="dur" min="30" max="900" step="10" value="180" /></div>
+        <div class="sl"><label for="cps">quantity B <span class="v" id="cps-v">4</span></label><input type="range" id="cps" min="0.5" max="60" step="0.5" value="4" /><div class="hint">The number that decides this. Currently a guess.</div></div>
+      </div>
+      <div class="tscroll"><table class="cmp">
+        <thead><tr><th>&nbsp;</th><th>Baseline (measured)</th><th>Proposed (assumed)</th><th>Difference</th></tr></thead>
+        <tbody><tr><td>metric</td><td class="num" id="t-a">-</td><td class="num" id="t-b">-</td><td class="num" id="t-r">-</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="wfoot"><span class="cap" id="be"></span></div>
+  </div>
+
+  <h2>What would kill this</h2>
+  <div class="widget">
+    <div class="wlabel">Risk register, most fatal first</div>
+    <div class="wbody" style="padding:0">
+      <div class="receipt">
+        <span class="m m-risk">[high]</span> <strong>The risk, in a short sentence.</strong><span data-fn="ex-inference"></span>
+        <span class="src">Why it matters and what it would break.</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>What to measure first</h2>
+  <div class="widget">
+    <div class="wlabel">Experiments</div>
+    <div class="wbody" style="padding:0">
+      <div id="tasks"></div>
+      <div class="addrow">
+        <input id="tnew" type="text" placeholder="Add an experiment or open question" aria-label="New experiment" />
+        <button class="act" id="tadd">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <h2>Where we ended up</h2>
+  <p>What holds, what does not, and the single next action.</p>
+
+  <hr class="sep" />
+
+  <h2>References</h2>
+  <p class="note" id="refs-summary"></p>
+  <ol class="refs" id="refs"></ol>
+
+  <h2>Notes</h2>
+  <textarea id="notes" placeholder="Observations, counterarguments, measurements as they come in..."></textarea>
+  <div class="saved" id="saved"></div>
+  <p><button class="act" id="export">Copy everything as markdown</button></p>
+
+  <footer>Sources read at time of writing; line numbers drift. Saved to this browser only.</footer>
+</div>
+
+<div class="fnpop" id="fnpop" role="tooltip"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "research-notes-v1";
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- references: one entry per key. kind = source | doc | inference | assumption ---- */
+  var NOTES = {
+    "ex-doc":        { kind:"doc",        what:"What the published document states, quoted tightly enough to check.", where:"vendor docs / page path", url:"https://example.com" },
+    "ex-source":     { kind:"source",     what:"What the code actually does, named precisely.", where:"org/repo · path/to/File.ext", url:"https://github.com/" },
+    "ex-inference":  { kind:"inference",  what:"What follows from the cited facts, and the part that is NOT tested.", where:"reasoned from ex-source; X unverified" },
+    "ex-assumption": { kind:"assumption", what:"A number nobody has measured. Say what would settle it.", where:"not measured" }
+  };
+
+  var KINDLABEL = { source:"source", doc:"published", inference:"inference", assumption:"unverified" };
+  var order = [], byKey = {};
+
+  function buildRefs() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-fn]"), function (el) {
+      var key = el.getAttribute("data-fn"), n = NOTES[key];
+      if (!n) { console.warn("unknown footnote key:", key); el.remove(); return; }
+      if (!byKey[key]) { order.push(key); byKey[key] = { num: order.length, refs: [] }; }
+      var rec = byKey[key], id = "fnref-" + rec.num + "-" + (rec.refs.length + 1);
+      rec.refs.push(id);
+      var sup = document.createElement("sup");
+      sup.className = "ref";
+      sup.innerHTML = '<a href="#fn-'+rec.num+'" id="'+id+'" data-key="'+esc(key)+'" data-kind="'+n.kind+
+        '" aria-label="Reference '+rec.num+', '+KINDLABEL[n.kind]+'">'+rec.num+'</a>';
+      el.parentNode.replaceChild(sup, el);
+    });
+
+    document.getElementById("refs").innerHTML = order.map(function (key) {
+      var n = NOTES[key], rec = byKey[key];
+      var backs = rec.refs.map(function (id, i) {
+        return '<a href="#'+id+'" aria-label="Back to citation '+(i+1)+'">&#8617;'+(rec.refs.length>1?(i+1):"")+'</a>';
+      }).join(" ");
+      return '<li id="fn-'+rec.num+'"><span class="kind" data-k="'+n.kind+'">'+KINDLABEL[n.kind]+'</span><span>'+
+        esc(n.what)+'<span class="where">'+
+        (n.url ? '<a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+esc(n.where)+'</a>' : esc(n.where))+
+        '<span class="backs">'+backs+'</span></span></span></li>';
+    }).join("");
+
+    var c = { source:0, doc:0, inference:0, assumption:0 };
+    order.forEach(function (k) { c[NOTES[k].kind]++; });
+    var facts = c.source + c.doc, total = order.length || 1;
+    document.getElementById("i-total").textContent = order.length;
+    document.getElementById("i-fact").textContent = facts;
+    document.getElementById("i-inf").textContent = c.inference;
+    document.getElementById("i-asm").textContent = c.assumption;
+    document.getElementById("i-bar").innerHTML =
+      [{n:facts,c:"#047857"},{n:c.inference,c:"#2563eb"},{n:c.assumption,c:"#b45309"}]
+      .map(function(s){return '<i data-w="'+(s.n/total*100)+'" style="background:'+s.c+'"></i>';}).join("");
+    // Width starts at 0 in CSS and is set on a later frame so the proportion resolves visibly.
+    // The timeout is not belt-and-braces: rAF is starved in headless capture, background tabs and
+    // print, and without it the bar stays empty forever, hiding the page's headline number.
+    var segs = document.querySelectorAll("#i-bar i"), painted = false;
+    var paint = function(){ if (painted) return; painted = true;
+      Array.prototype.forEach.call(segs, function(i){ i.style.width = i.dataset.w + "%"; }); };
+    if (REDUCED) paint();
+    else { requestAnimationFrame(function(){ requestAnimationFrame(paint); }); setTimeout(paint, 200); }
+    document.getElementById("i-legend").textContent =
+      Math.round(facts/total*100)+"% of distinct claims trace to a file or a published benchmark. "+
+      c.assumption+(c.assumption===1?" is unmeasured, and the conclusion depends on it.":" are unmeasured, and the conclusion depends on them.");
+    document.getElementById("refs-summary").textContent =
+      order.length+" distinct references. "+c.source+" read from source, "+c.doc+
+      " from published documentation, "+c.inference+" inferred, "+c.assumption+" unverified.";
+  }
+  buildRefs();
+
+  /* ---- popover ---- */
+  var pop = document.getElementById("fnpop"), popT = null;
+  function showPop(a) {
+    var n = NOTES[a.dataset.key]; if (!n) return;
+    pop.innerHTML = '<span class="k" style="color:'+
+      ({source:"#047857",doc:"#047857",inference:"#2563eb",assumption:"#b45309"})[n.kind]+'">['+
+      a.textContent+"] "+KINDLABEL[n.kind]+"</span>"+esc(n.what)+'<span class="s">'+esc(n.where)+"</span>";
+    pop.classList.add("on");
+    var r = a.getBoundingClientRect();
+    pop.style.top = (r.bottom + window.scrollY + 6) + "px";
+    pop.style.left = Math.max(8, Math.min(r.left + window.scrollX,
+      window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 14)) + "px";
+  }
+  function hidePop(){ pop.classList.remove("on"); }
+  document.addEventListener("mouseover", function(e){ var a=e.target.closest&&e.target.closest("sup.ref a"); if(a){clearTimeout(popT); showPop(a);} });
+  document.addEventListener("mouseout", function(e){ if(e.target.closest&&e.target.closest("sup.ref a")) popT=setTimeout(hidePop,180); });
+  pop.addEventListener("mouseenter", function(){ clearTimeout(popT); });
+  pop.addEventListener("mouseleave", hidePop);
+  document.addEventListener("focusin", function(e){ if(e.target.matches&&e.target.matches("sup.ref a")) showPop(e.target); else hidePop(); });
+  window.addEventListener("scroll", hidePop, { passive:true });
+
+  /* ---- landing flash: mark where a jump put you, then let it fade ---- */
+  // A keyframe rather than a transition: the highlight must be fully on immediately, then decay.
+  // A transition-in gets cancelled by the class removal and barely renders.
+  function flash(el) {
+    if (!el) return;
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    el.addEventListener("animationend", function h(){ el.classList.remove("flash"); el.removeEventListener("animationend", h); });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('sup.ref a, ol.refs .backs a');
+    if (!a) return;
+    var target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
+    hidePop();
+    // Forward jumps land on a reference row; backlinks land on a marker inside prose.
+    flash(target.tagName === "LI" ? target : (target.closest("sup.ref") || target));
+  });
+
+  var flagBtn = document.getElementById("flag");
+  flagBtn.addEventListener("click", function () {
+    var on = document.body.classList.toggle("flagging");
+    flagBtn.setAttribute("aria-pressed", String(on));
+    flagBtn.textContent = on ? "Clear highlighting" : "Highlight everything not from a primary source";
+    // Stagger in document order so the eye is drawn down the page to where the weak claims
+    // cluster. Capped so the whole sweep stays under a third of a second at any length.
+    var weak = document.querySelectorAll('sup.ref a[data-kind="inference"], sup.ref a[data-kind="assumption"]');
+    Array.prototype.forEach.call(weak, function (a, i) {
+      a.style.transitionDelay = on ? Math.min(i * 9, 300) + "ms" : "0ms";
+    });
+  });
+
+  /* ---- stepper ---- */
+  var PIPES = {
+    a: { label:"Variant A: one pass", stages:["stage one","stage two","stage three"],
+         sub:["note","note","note"], hot:1,
+         steps:[{i:0,cap:"What happens first."},{i:1,cap:"The expensive step."},{i:2,cap:"What ships."}],
+         desc:"One line framing this variant." },
+    b: { label:"Variant B: one pass", stages:["stage one","stage two","stage three"],
+         sub:["note","note","note"], hot:-1,
+         steps:[{i:-1,cap:"The idle case: nothing runs."},{i:0,cap:"Trigger."},{i:2,cap:"Result."}],
+         desc:"One line framing this variant." }
+  };
+  var pipeKey="a", pipeStep=0, svg=document.getElementById("pipe-svg");
+  // Nodes are built once and mutated. Rebuilding innerHTML on every render would replace the
+  // elements, so no CSS transition would ever fire. That is the usual reason animated SVG looks dead.
+  var NS="http://www.w3.org/2000/svg", cells=null, builtFor=null;
+  function svgEl(t,a){ var e=document.createElementNS(NS,t); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  function buildPipe(p){
+    svg.textContent=""; cells=[];
+    var n=p.stages.length, boxW=140, gap=(600-n*boxW)/(n-1), y=14, h=56;
+    for(var k=0;k<n;k++){
+      var x=10+k*(boxW+gap);
+      if(k<n-1){ var bx=x+boxW+gap;
+        svg.appendChild(svgEl("line",{x1:x+boxW+3,y1:y+h/2,x2:bx-7,y2:y+h/2,stroke:"#cbd5e1","stroke-width":1}));
+        svg.appendChild(svgEl("polygon",{points:bx+","+(y+h/2)+" "+(bx-6)+","+(y+h/2-3)+" "+(bx-6)+","+(y+h/2+3),fill:"#cbd5e1"})); }
+      var box=svgEl("rect",{"class":"box",x:x,y:y,width:boxW,height:h,rx:2});
+      var lbl=svgEl("text",{"class":"lbl",x:x+boxW/2,y:y+26,"text-anchor":"middle","font-family":"ui-monospace, monospace","font-size":10,"font-weight":700});
+      var thr=svgEl("text",{"class":"thr",x:x+boxW/2,y:y+42,"text-anchor":"middle","font-family":"ui-monospace, monospace","font-size":9});
+      lbl.textContent=p.stages[k]; thr.textContent=p.sub[k];
+      svg.appendChild(box); svg.appendChild(lbl); svg.appendChild(thr);
+      cells.push({box:box,lbl:lbl,thr:thr});
+    }
+    builtFor=p;
+  }
+  function drawPipe(){
+    var p=PIPES[pipeKey], st=p.steps[pipeStep], active=st.i;
+    if(builtFor!==p) buildPipe(p);
+    cells.forEach(function(c,k){
+      var on=k===active, hot=on&&k===p.hot;
+      c.box.setAttribute("stroke", on?(hot?"#f59e0b":"#334155"):"#cbd5e1");
+      c.box.setAttribute("fill", on?(hot?"rgba(245,158,11,0.10)":"rgba(51,65,85,0.05)"):"#fff");
+      c.box.setAttribute("stroke-width", on?1.5:1);
+      c.lbl.setAttribute("fill", on?"#334155":"#94a3b8");
+      c.thr.setAttribute("fill", on?"#64748b":"#cbd5e1");
+    });
+    document.getElementById("pipe-label").textContent=p.label;
+    document.getElementById("pipe-cap").textContent=st.cap;
+    document.getElementById("pipe-count").textContent=(pipeStep+1)+" / "+p.steps.length;
+    document.getElementById("pipe-desc").textContent=p.desc;
+    document.getElementById("pipe-prev").disabled=pipeStep===0;
+    document.getElementById("pipe-next").disabled=pipeStep===p.steps.length-1;
+  }
+  function setPipe(k){ pipeKey=k; pipeStep=0;
+    document.getElementById("pipe-a").setAttribute("aria-pressed",String(k==="a"));
+    document.getElementById("pipe-b").setAttribute("aria-pressed",String(k==="b")); drawPipe(); }
+  document.getElementById("pipe-a").addEventListener("click",function(){setPipe("a");});
+  document.getElementById("pipe-b").addEventListener("click",function(){setPipe("b");});
+  document.getElementById("pipe-prev").addEventListener("click",function(){if(pipeStep>0){pipeStep--;drawPipe();}});
+  document.getElementById("pipe-next").addEventListener("click",function(){if(pipeStep<PIPES[pipeKey].steps.length-1){pipeStep++;drawPipe();}});
+  document.getElementById("pipe-reset").addEventListener("click",function(){pipeStep=0;drawPipe();});
+
+  /* ---- state ---- */
+  var DEFAULT_TASKS = [
+    { t:"The cheapest experiment that could kill the idea.", cost:"afternoon", done:false },
+    { t:"The one that costs real work.", cost:"2-3 days", done:false }
+  ];
+  var state = (function(){
+    try { var p=JSON.parse(localStorage.getItem(KEY)||"null");
+      if(p) return { tasks:Array.isArray(p.tasks)?p.tasks:DEFAULT_TASKS.slice(), notes:p.notes||"", model:p.model||{} };
+    } catch(e){}
+    return { tasks:DEFAULT_TASKS.slice(), notes:"", model:{} };
+  })();
+  var savedEl=document.getElementById("saved"), savedT=null;
+  function save(){ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    savedEl.textContent="saved "+new Date().toLocaleTimeString();
+    clearTimeout(savedT); savedT=setTimeout(function(){savedEl.textContent="";},2400); }
+
+  var tasksEl=document.getElementById("tasks");
+  function renderTasks(){
+    tasksEl.innerHTML=state.tasks.map(function(q,i){
+      return '<div class="task'+(q.done?" done":"")+'"><input type="checkbox" data-i="'+i+'"'+(q.done?" checked":"")+
+        ' aria-label="Done: '+esc(q.t)+'" /><span class="t">'+esc(q.t)+'</span><span class="cost">'+esc(q.cost||"")+
+        '</span><button class="kill" data-k="'+i+'" aria-label="Remove">x</button></div>';}).join("");
+  }
+  tasksEl.addEventListener("change",function(e){ if(e.target.type==="checkbox"){state.tasks[+e.target.dataset.i].done=e.target.checked;renderTasks();save();} });
+  tasksEl.addEventListener("click",function(e){ if(e.target.classList.contains("kill")){state.tasks.splice(+e.target.dataset.k,1);renderTasks();save();} });
+  var tnew=document.getElementById("tnew");
+  function addTask(){ var v=tnew.value.trim(); if(!v)return; state.tasks.push({t:v,cost:"",done:false}); tnew.value=""; renderTasks(); save(); }
+  document.getElementById("tadd").addEventListener("click",addTask);
+  tnew.addEventListener("keydown",function(e){ if(e.key==="Enter") addTask(); });
+
+  /* ---- model: replace with the real arithmetic ---- */
+  var C = {
+    dur:{ el:document.getElementById("dur"), out:document.getElementById("dur-v"), f:function(v){return v;} },
+    cps:{ el:document.getElementById("cps"), out:document.getElementById("cps-v"), f:function(v){return v;} }
+  };
+  Object.keys(C).forEach(function(k){
+    if(typeof state.model[k]!=="undefined") C[k].el.value=state.model[k];
+    C[k].el.addEventListener("input",function(){ state.model[k]=C[k].el.value; compute(); });
+    C[k].el.addEventListener("change",save);
+  });
+  var last={};
+  function compute(){
+    Object.keys(C).forEach(function(k){ C[k].out.textContent=C[k].f(C[k].el.value); });
+    var a=+C.dur.el.value, b=+C.cps.el.value;
+    var baseline=a*10, proposed=a*b;
+    document.getElementById("t-a").textContent=baseline;
+    document.getElementById("t-b").textContent=proposed;
+    var e=document.getElementById("t-r"), r=proposed>0?baseline/proposed:0;
+    // Compare the verdict token only. Comparing className would include "bump" itself and the
+    // cell would re-fire on every render.
+    var verdict = r>=1 ? "win" : "lose", was = e.classList.contains("win") ? "win" : (e.classList.contains("lose") ? "lose" : null);
+    e.textContent = r>=1 ? r.toFixed(1)+"x less" : (1/r).toFixed(1)+"x more";
+    e.className = "num " + verdict;
+    if (was && was !== verdict && !REDUCED) { e.classList.remove("bump"); void e.offsetWidth; e.classList.add("bump"); }
+    document.getElementById("be").innerHTML="Break-even at <strong>"+(10).toFixed(1)+"</strong> for quantity B.";
+    last={a:a,b:b,baseline:baseline,proposed:proposed};
+  }
+
+  /* ---- notes + export ---- */
+  var notes=document.getElementById("notes"); notes.value=state.notes; var nT=null;
+  notes.addEventListener("input",function(){ state.notes=notes.value; clearTimeout(nT); nT=setTimeout(save,500); });
+  var toast=document.getElementById("toast"), toastT=null;
+  function say(m){ toast.textContent=m; toast.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(function(){toast.classList.remove("on");},2000); }
+
+  document.getElementById("export").addEventListener("click",function(){
+    var L=["# TITLE: working notes",""];
+    L.push("## Model", "- A "+last.a+", B "+last.b, "- baseline "+last.baseline+" vs proposed "+last.proposed, "");
+    L.push("## Experiments");
+    state.tasks.forEach(function(q){ L.push("- ["+(q.done?"x":" ")+"] "+q.t+(q.cost?"  ("+q.cost+")":"")); });
+    L.push("", "## References");
+    order.forEach(function(k){ var n=NOTES[k];
+      L.push("["+byKey[k].num+"] ("+KINDLABEL[n.kind]+") "+n.what+" · "+n.where+(n.url?" "+n.url:"")); });
+    if(state.notes.trim()) L.push("", "## Notes", state.notes.trim());
+    var text=L.join("\n");
+    function fallback(){ var ta=document.createElement("textarea"); ta.value=text;
+      ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+      try{document.execCommand("copy"); say("Copied as markdown");}catch(e){say("Copy failed");}
+      document.body.removeChild(ta); }
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(text).then(function(){say("Copied as markdown");},fallback);
+    else fallback();
+  });
+
+  renderTasks(); compute(); drawPipe();
+})();
+</script>
+</body>
+</html>

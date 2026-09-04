@@ -30,6 +30,16 @@ Scanning is non-recursive: every `<name>/SKILL.md` here is one skill.
 | cavecrew | github.com/JuliusBrussee/caveman | skills/cavecrew | MIT + BSL |
 | impeccable | github.com/pbakaus/impeccable (built via `npx skills add`) | skills/impeccable | Apache-2.0 |
 | claude-for-safari | github.com/SDLLL/claude-for-safari | skills/claude-for-safari | MIT |
+| smalldocs | github.com/smalldocs/smalldocs | skills/smalldocs | see upstream |
+| research-notes | personal | skills/research-notes | private |
+| tldr | personal | skills/tldr | private |
+| agent-canvas | personal | skills/agent-canvas | private |
+| architecture-diagram | personal | skills/architecture-diagram | private |
+| process-flow-diagram | personal | skills/process-flow-diagram | private |
+| prompt-lookup | personal | skills/prompt-lookup | private |
+| react-doctor | personal | skills/react-doctor | private |
+| skill-lookup | personal | skills/skill-lookup | private |
+| skills | personal | skills/skills | private |
 
 ## Updating a skill
 

@@ -16,13 +16,13 @@ dotfiles-mac/
 ├── zsh/                # .zshrc, .zprofile, .zsh_secrets.example
 ├── ghostty/            # terminal config
 ├── aerospace/          # i3-like tiling WM config
-├── claude/             # ~/.claude/CLAUDE.md (SmallDocs context block)
 └── omp/                # Oh My Pi coding agent
     ├── config.yml      # model roles, skills, statusline, …
     ├── lsp.json        # custom rust-glancer LSP
     ├── agents/         # swiftui-expert subagent
     ├── extensions/     # herdr state (TS)
-    ├── skills/         # 20 vendored skills (baked in)
+    ├── commands/       # slash commands (primer, build, create)
+    ├── skills/         # 30 vendored skills (baked in)
     └── *.example       # seeded secret templates
 ```
 
@@ -61,7 +61,7 @@ _is_ editing `zsh/.zshrc` — commit from the repo to version changes.
 
 ---
 
-## Skills (20, vendored under `omp/skills/`)
+## Skills (30, vendored under `omp/skills/`)
 
 Baked into the repo so a clone works offline; symlinked to `~/.omp/agent/skills`
 (omp's native user-skills dir, auto-scanned at startup). Everything loads except
@@ -72,9 +72,11 @@ names in `skills.ignoredSkills`.
 | emilkowalski/skills | animate · animation-vocabulary · apple-design · emil-design-eng · find-animation-opportunities · improve-animations · prototype · review-animations |
 | JuliusBrussee/caveman | caveman · caveman-compress · caveman-commit · caveman-review · caveman-stats · caveman-help · cavecrew |
 | singles | karpathy-guidelines · herdr · gh-stack · impeccable (compiled) · claude-for-safari |
+| migrated from ~/.claude/skills | tldr · smalldocs · research-notes · agent-canvas · architecture-diagram · process-flow-diagram · prompt-lookup · react-doctor · skill-lookup · skills |
 
 Provenance + per-skill update recipe: `omp/skills/SOURCES.md`.
-**smalldocs is not a skill** — it rides in `claude/CLAUDE.md` as context.
+Slash commands (`primer`, `build`, `create`) install to `~/.omp/agent/commands/`.
+Both dirs use omp's **native** `.omp` locations, not `~/.claude/` (which this setup's worker does not scan).
 
 ---
 
