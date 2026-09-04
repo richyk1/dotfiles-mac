@@ -21,8 +21,6 @@ advisor:
 skills:
   ignoredSkills:
     - brainstorming
-  customDirectories:
-    - ~/.omp/skills
 providers:
   tts: local
 stt:

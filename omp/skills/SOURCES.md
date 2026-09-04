@@ -1,9 +1,10 @@
 # Vendored skills — provenance
 
 These skills are vendored (committed) into the repo so a fresh clone works
-offline. `install.sh` symlinks this directory to `~/.omp/skills`, which
-`omp/config.yml` lists under `skills.customDirectories`. Each name must also
-appear in `skills.includeSkills` (allowlist) to load.
+offline. `install.sh` symlinks this directory to `~/.omp/agent/skills`, omp's
+native user-skills location, which is auto-scanned at startup. No path in
+`config.yml` and no allowlist entry are needed; every vendored skill loads
+unless named in `skills.ignoredSkills`.
 
 Scanning is non-recursive: every `<name>/SKILL.md` here is one skill.
 

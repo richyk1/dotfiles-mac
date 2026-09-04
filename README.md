@@ -18,10 +18,10 @@ dotfiles-mac/
 ├── aerospace/          # i3-like tiling WM config
 ├── claude/             # ~/.claude/CLAUDE.md (SmallDocs context block)
 └── omp/                # Oh My Pi coding agent
-    ├── config.yml      # models, skills allowlist, statusline, …
+    ├── config.yml      # model roles, skills, statusline, …
     ├── lsp.json        # custom rust-glancer LSP
     ├── agents/         # swiftui-expert subagent
-    ├── extensions/     # herdr state + tailscale-coms (TS)
+    ├── extensions/     # herdr state (TS)
     ├── skills/         # 20 vendored skills (baked in)
     └── *.example       # seeded secret templates
 ```
@@ -56,15 +56,16 @@ _is_ editing `zsh/.zshrc` — commit from the repo to version changes.
 | **zsh** | speed-tuned oh-my-zsh (`afowler`, `git` plugin, cached compinit), lazy conda/SDKMAN, fnm + pyenv, portable `$HOME` paths; `.zprofile` = arch-agnostic `brew shellenv` + OrbStack |
 | **Ghostty** | Argonaut theme, Maple Mono NF @ 11pt (cv31–37), hidden titlebar, `macos-option-as-alt = left` (word-delete), tmux keybinds, quick-terminal toggle |
 | **AeroSpace** | 8px inner/outer gaps, `auto-reload-config`, `start-at-login` |
-| **omp** | opus/sonnet model roles, nerd statusline, advisor + STT, custom `rust-glancer` LSP, `swiftui-expert` agent, `herdr` + `tailscale-coms` extensions, 20-skill allowlist |
+| **omp** | opus/sonnet model roles, nerd statusline, advisor + STT, custom `rust-glancer` LSP, `swiftui-expert` agent, `herdr` extension, 20 vendored skills |
 | **claude** | `~/.claude/CLAUDE.md` SmallDocs context block (sdoc) |
 
 ---
 
 ## Skills (20, vendored under `omp/skills/`)
 
-Baked into the repo so a clone works offline; symlinked to `~/.omp/skills`
-(an `omp` `customDirectory`) and gated by `skills.includeSkills`.
+Baked into the repo so a clone works offline; symlinked to `~/.omp/agent/skills`
+(omp's native user-skills dir, auto-scanned at startup). Everything loads except
+names in `skills.ignoredSkills`.
 
 | Source | Skills |
 |--------|--------|

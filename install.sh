@@ -27,8 +27,7 @@ link omp/config.yml                       "$HOME/.omp/agent/config.yml"
 link omp/lsp.json                         "$HOME/.omp/agent/lsp.json"
 link omp/agents/swiftui-expert.md         "$HOME/.omp/agent/agents/swiftui-expert.md"
 link omp/extensions/herdr-omp-agent-state.ts "$HOME/.omp/agent/extensions/herdr-omp-agent-state.ts"
-link omp/extensions/tailscale-coms.ts     "$HOME/.omp/agent/extensions/tailscale-coms.ts"
-link omp/skills                           "$HOME/.omp/skills"
+link omp/skills                           "$HOME/.omp/agent/skills"
 
 # --- secret files: seeded from templates, never symlinked, never committed ---
 seed zsh/.zsh_secrets.example             "$HOME/.zsh_secrets"
